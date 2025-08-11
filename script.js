@@ -1,7 +1,5 @@
-// Jahr im Footer aktualisieren (DOM Basics)
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Theme Toggle (State, Attribute-API, Local Storage)
 const toggle = document.getElementById('themeToggle');
 const root = document.documentElement;
 
@@ -24,22 +22,27 @@ toggle.addEventListener('click', () => {
   setTheme(next);
 });
 
-// Kontaktformular (Client‑Side Validierung, Events)
 const form = document.getElementById('contactForm');
 const msg = document.getElementById('formMsg');
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const data = new FormData(form);
-  const name = data.get('name')?.trim();
-  const email = data.get('email')?.trim();
-  const text = data.get('message')?.trim();
+form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Seite nicht neu laden
+    msg.textContent = 'Sende …';
 
-  if(!name || !email || !text){
-    msg.textContent = 'Bitte fülle alle Felder aus.';
-    return;
-  }
-  // Demo: In echt würdest du hier an einen Backend‑Service senden.
-  msg.textContent = 'Danke! Nachricht wurde (simuliert) gesendet.';
-  form.reset();
+    try {
+        const res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+            msg.textContent = 'Danke! Deine Nachricht wurde gesendet.';
+            form.reset();
+        } else {
+            msg.textContent = 'Ups, das hat nicht geklappt. Bitte später erneut versuchen.';
+        }
+    } catch (err) {
+        msg.textContent = 'Netzwerkfehler – bist du online?';
+    }
 });
