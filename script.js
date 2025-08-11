@@ -18,14 +18,10 @@ const saved = localStorage.getItem('theme');
 setTheme(saved || 'dark');
 
 
-
 toggle.addEventListener('click', () => {
   const next = root.classList.contains('light') ? 'dark' : 'light';
   setTheme(next);
 });
-//
-
-
 
 
 const form = document.getElementById('contactForm');
